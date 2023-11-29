@@ -104,6 +104,12 @@ public class ConexionDB {
 
     }
 
+    //***********************ALTA TECNICO
+    public static void altaEspecialidad(EspecialidadTecnico esp) {
+
+    }
+
+
         public static Map<Integer, String> traerCondIva() {
 
             Map<Integer, String> condicionIva = new HashMap<>();

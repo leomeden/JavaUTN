@@ -47,6 +47,7 @@ public class Menu {
                         break;
                     case 4:
                         System.out.println("Opcion TECNICO");
+                        MenuTecnico.menuTecnico();
                         break;
                     case 5:
                         salir=true;
