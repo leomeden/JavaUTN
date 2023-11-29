@@ -11,7 +11,18 @@ public class Validaciones {
       return false;
     }
 
-    private static boolean isNumeric(String strNum) {
+    public boolean validateDNI(String strNum){
+        if (isNumeric(strNum)){
+            return (strNum.length() < 9 && strNum.length() > 6);
+        }
+        return false;
+    }
+
+    public boolean validateNotVoid(String str){
+        return !str.isEmpty();
+    }
+
+    public boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
         }
@@ -21,5 +32,8 @@ public class Validaciones {
             return false;
         }
         return true;
+    }
+    public boolean validateRango(int val, int max){
+        return val <= max && val != 0;
     }
 }

@@ -1,7 +1,7 @@
 package GestionDeReclamos;
 
 
-import java.sql.Date;
+import GestionDeReclamos.Menus.Menu;
 
 
 public class Main {
