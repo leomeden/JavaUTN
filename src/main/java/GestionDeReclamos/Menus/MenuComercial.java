@@ -77,6 +77,7 @@ public class MenuComercial {
             cl.setIdcliente(null);
             boolean cli = true;
 
+            //agregar CUIT a Cliente
             while(cli){
                 System.out.println("Ingrese CUIT: ");
                 opcion = sn.nextLine();
@@ -88,47 +89,96 @@ public class MenuComercial {
                 } else {
                     System.out.println("CUIT incorrecto!");
                 }
-
-
             }
-
             cl.setCuit(parseLong(opcion));
 
-            System.out.println("Ingrese RAZON SOCIAL: ");
-            opcion = sn.nextLine();
+            //agregar Razon Social a Cliente
+            cli = true;
+            while(cli) {
+                System.out.println("Ingrese RAZON SOCIAL: ");
+                opcion = sn.nextLine();
+                if(!validar.validateNotVoid(opcion)){
+                    System.out.println("No puede dejar el campo vacio\n");
+                } else {
+                    cli = false;
+                }
+            }
             cl.setRazonSocial(opcion);
 
-            System.out.println("Seleccione CONDICION IVA: ");
-            Map<Integer, String> condicionIva = new HashMap<>();
-            condicionIva = ConexionDB.traerCondIva();
-            System.out.println("***************************");
-            condicionIva.forEach((key, value) -> {
-                System.out.println(key + "\t" + value);
-            });
-            System.out.println("***************************");
-            //System.out.println(condicionIva.size());
-            System.out.println("\nIngrese una opcion: ");
-            opcion = sn.nextLine();
+            //agregar Condicion de IVA
+            cli = true;
+            while(cli){
+                System.out.println("Seleccione CONDICION IVA: ");
+                Map<Integer, String> condicionIva = new HashMap<>();
+                condicionIva = ConexionDB.traerCondIva();
+                System.out.println("***************************");
+                condicionIva.forEach((key, value) -> {
+                    System.out.println(key + "\t" + value);
+                });
+                System.out.println("***************************");
+                //System.out.println(condicionIva.size());
+                System.out.println("\nIngrese una opcion: ");
+                opcion = sn.nextLine();
+
+                if(validar.validateNotVoid(opcion) && validar.isNumeric(opcion)){
+                    if(validar.validateRango(parseInt(opcion), condicionIva.size())){
+                        cli = false;
+                    } else {
+                        System.out.println("\nIngrese una opción valida!!!!\n");
+                    }
+                } else {
+                    System.out.println("\nIngrese una opción valida!!!!\n");
+                }
+            }
             cl.setIdCondIva(parseInt(opcion));
 
-            System.out.println("Ingrese DIRECCION: ");
-            opcion = sn.nextLine();
+            //agregar Direccion
+            cli = true;
+            while(cli) {
+                System.out.println("Ingrese DIRECCION: ");
+                opcion = sn.nextLine();
+                if(!validar.validateNotVoid(opcion)){
+                    System.out.println("No puede dejar el campo vacio\n");
+                } else {
+                    cli = false;
+                }
+            }
             cl.setDireccion(opcion);
 
-            System.out.println("Ingrese TELEFONO: ");
-            opcion = sn.nextLine();
+            //agregar Telefono
+            cli = true;
+            while(cli) {
+                System.out.println("Ingrese TELEFONO: ");
+                opcion = sn.nextLine();
+                if(!validar.validateNotVoid(opcion) || !validar.isNumeric(opcion)){
+                    System.out.println("Debe ingresar telefono valido\n");
+                } else {
+                    cli = false;
+                }
+            }
             cl.setTelefono(parseLong(opcion));
 
-            System.out.println("Ingrese EMAIL: ");
-            opcion = sn.nextLine();
+            //agregar Email
+            cli = true;
+            while(cli) {
+                System.out.println("Ingrese EMAIL: ");
+                opcion = sn.nextLine();
+                if(!validar.validateNotVoid(opcion)){
+                    System.out.println("No puede dejar el campo vacio\n");
+                } else {
+                    cli = false;
+                }
+            }
             cl.setEmail(opcion);
 
+            //agregar Fecha Alta y setear Activo y Fecha Baja
             java.util.Date date = new java.util.Date();
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             cl.setFechaAlta(sqlDate);
             cl.setActivo(true);
             cl.setFechaBaja(null);
 
+            //imprimo objeto para testeo
             System.out.println(cl.toString());
             try {
                 ConexionDB.conexionDB();

@@ -74,9 +74,9 @@ public class MenuRRHH {
             Tecnico te = new Tecnico();
 
             te.setIdtecnico(null);
+            boolean tec = true;
 
             //agregar DNI a Tecnico
-            boolean tec = true;
             while(tec){
                 System.out.println("Ingrese DNI: ");
                 opcion = sn.nextLine();
@@ -190,6 +190,7 @@ public class MenuRRHH {
             }
             te.setIdmedionotif(parseInt(opcion));
 
+            //imprimo objeto para testeo
             System.out.println(te.toString());
             try {
                 ConexionDB.conexionDB();
