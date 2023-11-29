@@ -1,7 +1,5 @@
 package GestionDeReclamos;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.InputMismatchException;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -158,6 +156,7 @@ public class Menu {
         }
     }
     private void submenuAltaCliente(){
+        Validaciones validar = new Validaciones();
         Scanner sn = new Scanner(System.in);
 
         String opcion ="";
@@ -173,11 +172,15 @@ public class Menu {
                 while(cli){
                     System.out.println("Ingrese CUIT: ");
                     opcion = sn.nextLine();
-
-                    cli = ConexionDB.traerCliente(parseLong(opcion));
-                    if(cli){
-                        System.out.println("Ese CUIT ya esta registrado");
+                    if(validar.validateCUIT(opcion)){
+                        cli = ConexionDB.traerCliente(parseLong(opcion));
+                        if(cli){
+                            System.out.println("Ese CUIT ya esta registrado");
+                        }
+                    } else {
+                        System.out.println("CUIT incorrecto!");
                     }
+
 
                 }
 
@@ -188,7 +191,14 @@ public class Menu {
                 cl.setRazonSocial(opcion);
 
                 System.out.println("Seleccione CONDICION IVA: ");
-                ConexionDB.traerCondIva();
+                Map<Integer, String> condicionIva = new HashMap<>();
+                condicionIva = ConexionDB.traerCondIva();
+                System.out.println("***************************");
+                condicionIva.forEach((key, value) -> {
+                    System.out.println(key + "\t" + value);
+                });
+                System.out.println("***************************");
+                System.out.println(condicionIva.size());
                 System.out.println("\nIngrese una opcion: ");
                 opcion = sn.nextLine();
                 cl.setIdCondIva(parseInt(opcion));

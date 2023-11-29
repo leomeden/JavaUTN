@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConexionDB {
     private static Connection conX;
@@ -72,8 +74,9 @@ public class ConexionDB {
 
     }
 
-        public static void traerCondIva() {
+        public static Map<Integer, String> traerCondIva() {
 
+            Map<Integer, String> condicionIva = new HashMap<>();
 
         String consulta = "SELECT * FROM condiva";
 
@@ -83,8 +86,8 @@ public class ConexionDB {
                 sql = sT.executeQuery(consulta);
                 System.out.println("");
                 while (sql.next()) {
-
-                    System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
+                    condicionIva.put(sql.getInt(1), sql.getString(2));
+                    //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
 
                 }
         closeConX();
@@ -93,8 +96,7 @@ public class ConexionDB {
                 e.printStackTrace();
             }
 
-
-
+            return condicionIva;
     }
     public static boolean traerCliente(long cuit) {
 
