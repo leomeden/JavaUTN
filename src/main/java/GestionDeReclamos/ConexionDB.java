@@ -76,7 +76,7 @@ public class ConexionDB {
 
     //***********************ALTA TECNICO
     public static void altaTecnicoDB(Tecnico tec) {
-        //validar que el cuit no exista -tambien se podria validar el contrato(codSoporte)
+
         String consulta = "insert into tecnico(idtecnico, dni, cuilcuit, nombreapellido, fechaalta, activo, fechabaja, horasdiarias, telefono, email, idmedionotif)"
                 + " values (NULL,?,?,?,?,?,NULL,?,?,?,?)";
 
@@ -104,12 +104,28 @@ public class ConexionDB {
 
     }
 
-    //***********************ALTA TECNICO
+    //***********************ALTA Especialidad técnico
     public static void altaEspecialidad(EspecialidadTecnico esp) {
+        String consulta = "insert into especialidadtecnico(idespecialidad, idtecnico, idservicio, tiempoestimadotec)"
+                + " values (NULL,?,?,?)";
 
+        try {
+            PreparedStatement sqlUp = conX.prepareStatement(consulta);
+
+            sqlUp.setInt(1, esp.getIdtecnico());
+            sqlUp.setInt(2, esp.getIdservicio());
+            sqlUp.setInt(3, esp.getTiempoestimadotec());
+
+
+            sqlUp.executeUpdate();
+
+            System.out.println("La DB/TABLA ESPECIALIDAD TECNICO se actualizo con exito");
+
+        } catch (SQLException obj) {
+            System.out.println("Error en el insert de la tabla Especialidad Tecnico"+ obj);
+            obj.fillInStackTrace();
+        }
     }
-
-
         public static Map<Integer, String> traerCondIva() {
 
             Map<Integer, String> condicionIva = new HashMap<>();
@@ -181,6 +197,101 @@ public class ConexionDB {
         }
 
 
+        return resultado;
+    }
+
+    public static Map<Integer, String> traerTecnicos() {
+
+        Map<Integer, String> resultado = new HashMap<>();
+        String consulta = "SELECT * FROM tecnico";
+
+        ResultSet sql;
+        try {
+
+            conexionDB();
+            sql = sT.executeQuery(consulta);
+            System.out.println("");
+            while (sql.next()) {
+                resultado.put(sql.getInt(1), sql.getString(4));
+                //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
+            }
+            closeConX();
+            return resultado;
+        } catch (SQLException e) {
+            System.out.println("Error en el select de la tabla tecnico"+ e);
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    public static Map<Integer, String> traerServicios() {
+
+        Map<Integer, String> resultado = new HashMap<>();
+        String consulta = "SELECT * FROM servicio";
+
+
+        ResultSet sql;
+        try {
+
+            conexionDB();
+            sql = sT.executeQuery(consulta);
+            System.out.println("");
+            while (sql.next()) {
+                resultado.put(sql.getInt(1), sql.getString(3));
+                //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
+            }
+            closeConX();
+            return resultado;
+        } catch (SQLException e) {
+            System.out.println("Error en el select de la tabla servicio"+ e);
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    public static boolean verificarEspTec(int idTec, int idServ) {
+
+        boolean resultado=false;
+        String consulta = "SELECT * FROM especialidadtecnico WHERE idtecnico = "+ idTec + " AND idservicio = "+ idServ;
+
+        ResultSet sql;
+        try {
+
+            conexionDB();
+            sql = sT.executeQuery(consulta);
+            System.out.println("");
+            if (sql.next()) {
+                resultado= true;
+                //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
+            }
+            closeConX();
+            return resultado;
+        } catch (SQLException e) {
+            System.out.println("Error en el select de la tabla servicio"+ e);
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    public static int traerTiempoServicio(int idServ) {
+
+       Integer resultado = 0;
+        String consulta = "SELECT * FROM servicio WHERE idServicio ="  + idServ;
+
+        ResultSet sql;
+        try {
+            conexionDB();
+            sql = sT.executeQuery(consulta);
+            System.out.println("");
+            if (sql.next()) {
+                resultado = sql.getInt(4);
+            }
+            closeConX();
+            return resultado;
+        } catch (SQLException e) {
+            System.out.println("Error en el select de la tabla servicio"+ e);
+            e.printStackTrace();
+        }
         return resultado;
     }
 

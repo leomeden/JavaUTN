@@ -10,6 +10,8 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
+import static GestionDeReclamos.ConexionDB.traerTiempoServicio;
+import static GestionDeReclamos.ConexionDB.verificarEspTec;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
@@ -77,9 +79,83 @@ public class MenuTecnico {
 
             //agregar idTecnico ////////////Modificar esto según lo requerido
 
+            boolean esp = true;
+            while(esp){
+                System.out.println("Elija técnico a agregar especialidad: ");
+                Map<Integer, String> tecEsp = new HashMap<>();
+                tecEsp = ConexionDB.traerTecnicos();
+                System.out.println("***************************");
+                tecEsp.forEach((key, value) -> {
+                    System.out.println(key + "\t" + value);
+                });
+                System.out.println("***************************");
+                //System.out.println(medioNotif.size());
+                System.out.println("\nIngrese una opcion: ");
+                opcion = sn.nextLine();
+
+                if(validar.validateNotVoid(opcion) && validar.isNumeric(opcion)){
+                    if(validar.validateRango(parseInt(opcion), tecEsp.size())){
+                        esp = false;
+                    } else {
+                        System.out.println("\nIngrese una opción valida!!!!\n");
+                    }
+                } else {
+                    System.out.println("\nIngrese una opción valida!!!!\n");
+                }
+            }
+            es.setIdtecnico(parseInt(opcion));
+
             //agregar idServicio ////////////Modificar esto según lo requerido
+            esp = true;
+            while(esp){
+                System.out.println("Elija servicio para agregar a especialidades del tecnico: ");
+                Map<Integer, String> servicios = new HashMap<>();
+                servicios = ConexionDB.traerServicios();
+                System.out.println("***************************");
+                servicios.forEach((key, value) -> {
+                    System.out.println(key + "\t" + value);
+                });
+                System.out.println("***************************");
+                //System.out.println(medioNotif.size());
+                System.out.println("\nIngrese una opcion: ");
+                opcion = sn.nextLine();
+
+                if(validar.validateNotVoid(opcion) && validar.isNumeric(opcion)){
+                    if(validar.validateRango(parseInt(opcion), servicios.size())){
+                          if(!verificarEspTec(es.getIdtecnico(),parseInt(opcion))){
+                              esp = false;
+                          } else {
+                              System.out.println("\nEl tecnico ya tiene esa especialidad!!!!\n");
+                          }
+                    } else {
+                        System.out.println("\nIngrese una opción valida!!!!\n");
+                    }
+                } else {
+                    System.out.println("\nIngrese una opción valida!!!!\n");
+                }
+            }
+            es.setIdservicio(parseInt(opcion));
 
             //agregar tiempo ////////////Modificar esto según lo requerido
+            esp = true;
+            int tiempoServ = ConexionDB.traerTiempoServicio(parseInt(opcion));
+            while(esp){
+                System.out.println("Elija tiempo de servicio (Maximo = " + tiempoServ + ")");
+                opcion = sn.nextLine();
+                if(validar.validateNotVoid(opcion) && validar.isNumeric(opcion)){
+                    if (parseInt(opcion) <= tiempoServ && parseInt(opcion)>0){
+                        esp = false;
+
+                    } else {
+                        System.out.println("\nIngrese un valor correcto!!!!\n");
+                    }
+                } else {
+                    System.out.println("\nIngrese un valor correcto!!!!\n");
+                }
+                es.setTiempoestimadotec(parseInt(opcion));
+            }
+
+
 
             System.out.println(es.toString());
             try {
