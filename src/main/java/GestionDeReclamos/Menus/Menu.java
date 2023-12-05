@@ -40,6 +40,7 @@ public class Menu {
                         break;
                     case 2:
                         System.out.println("Opcion MESA DE AYUDA");
+                        MenuMesaDeAyuda.menuMesaDeAyuda();
                         break;
                     case 3:
                         System.out.println("Opcion COMERCIAL");

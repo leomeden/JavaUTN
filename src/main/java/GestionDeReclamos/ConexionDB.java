@@ -126,6 +126,59 @@ public class ConexionDB {
             obj.fillInStackTrace();
         }
     }
+
+
+    //***********************ALTA Servicio Contratado
+    public static void altaServicioContratado(ServicioCliente ser) {
+        String consulta = "insert into serviciocontratado(idservcontr, idcliente, idservicio, fechaaltaserv, servactivo, fechafincontrato)"
+                + " values (NULL,?,?,?,?, NULL)";
+
+        try {
+            PreparedStatement sqlUp = conX.prepareStatement(consulta);
+
+            sqlUp.setInt(1, ser.getIdcliente());
+            sqlUp.setInt(2, ser.getIdservicio());
+            sqlUp.setDate(3, ser.getFechaaltaserv());
+            sqlUp.setBoolean(4, ser.isServactivo());
+
+
+            sqlUp.executeUpdate();
+
+            System.out.println("La DB/TABLA SERVICIO CONTRATADO se actualizo con exito");
+
+        } catch (SQLException obj) {
+            System.out.println("Error en el insert de la tabla SERVICIO CONTRATADO"+ obj);
+            obj.fillInStackTrace();
+        }
+    }
+
+    //***********************ALTA Incidente
+    public static void altaIncidente(Incidente inc) {
+        String consulta = "insert into incidente(idincidente, idservicio, fechaalta, resuelto, fecharesuelto, idtecnico, idcliente, descrproblema, fechaestimada, descrresolucion)"
+                + " values (NULL,?,?,?,?,?,?,?,?,NULL)";
+
+        try {
+            PreparedStatement sqlUp = conX.prepareStatement(consulta);
+
+            sqlUp.setInt(1, inc.getIdservicio());
+            sqlUp.setDate(2, inc.getFechaalta());
+            sqlUp.setBoolean(3, inc.isResuelto());
+            sqlUp.setDate(4, inc.getFecharesuelto());
+            sqlUp.setInt(5, inc.getIdtecnico());
+            sqlUp.setInt(6, inc.getIdcliente());
+            sqlUp.setString(7, inc.getDescrproblema());
+            sqlUp.setDate(8, inc.getFechaestimada());
+
+            sqlUp.executeUpdate();
+
+            System.out.println("La DB/TABLA INCIDENTE se actualizo con exito");
+
+        } catch (SQLException obj) {
+            System.out.println("Error en el insert de la tabla INCIDENTE"+ obj);
+            obj.fillInStackTrace();
+        }
+    }
+
         public static Map<Integer, String> traerCondIva() {
 
             Map<Integer, String> condicionIva = new HashMap<>();
@@ -224,6 +277,30 @@ public class ConexionDB {
         return resultado;
     }
 
+    public static Map<Integer, String> traerClientes() {
+
+        Map<Integer, String> resultado = new HashMap<>();
+        String consulta = "SELECT * FROM cliente";
+
+        ResultSet sql;
+        try {
+
+            conexionDB();
+            sql = sT.executeQuery(consulta);
+            System.out.println("");
+            while (sql.next()) {
+                resultado.put(sql.getInt(1), sql.getString(3));
+                //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
+            }
+            closeConX();
+            return resultado;
+        } catch (SQLException e) {
+            System.out.println("Error en el select de la tabla cliente"+ e);
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
     public static Map<Integer, String> traerServicios() {
 
         Map<Integer, String> resultado = new HashMap<>();
@@ -238,6 +315,55 @@ public class ConexionDB {
             System.out.println("");
             while (sql.next()) {
                 resultado.put(sql.getInt(1), sql.getString(3));
+                //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
+            }
+            closeConX();
+            return resultado;
+        } catch (SQLException e) {
+            System.out.println("Error en el select de la tabla servicio"+ e);
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+    public static Map<Integer, String> traerNomServTec(int idServ) {
+
+        Map<Integer, String> resultado = new HashMap<>();
+        String consulta = "SELECT * FROM serviciostecnicosnombres WHERE idservicio = " + idServ;
+
+        ResultSet sql;
+        try {
+            conexionDB();
+            sql = sT.executeQuery(consulta);
+            System.out.println("");
+            while (sql.next()) {
+                resultado.put(sql.getInt(1), sql.getString(3));
+                //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
+            }
+            closeConX();
+            return resultado;
+        } catch (SQLException e) {
+            System.out.println("Error en el select de la tabla Especialidad Tecnico"+ e);
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+
+
+    public static Map<Integer, String> traerServiciosContratados(int idCli) {
+
+        Map<Integer, String> resultado = new HashMap<>();
+        String consulta = "SELECT * FROM serviciosclientes WHERE idcliente = " + idCli;
+
+
+        ResultSet sql;
+        try {
+
+            conexionDB();
+            sql = sT.executeQuery(consulta);
+            System.out.println("");
+            while (sql.next()) {
+                resultado.put(sql.getInt(2), sql.getString(3));
                 //System.out.println(sql.getInt(1)+"\t"+sql.getString(2));
             }
             closeConX();
@@ -272,6 +398,10 @@ public class ConexionDB {
         }
         return resultado;
     }
+
+
+
+
 
     public static int traerTiempoServicio(int idServ) {
 
@@ -318,5 +448,7 @@ public class ConexionDB {
 
         return medioNotif;
     }
+
+
 }
 
